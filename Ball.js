@@ -41,7 +41,7 @@ export default class Ball{
         this.vel = INIT_VEL;
     }
 
-    update(delta){
+    update(delta, paddleRects){
         this.x += this.dir.x * this.vel * delta;
         this.y += this.dir.y * this.vel * delta;
         this.vel += VEL_INCREASE * delta;
@@ -50,12 +50,17 @@ export default class Ball{
             this.dir.y *= -1;
         }
         
-        // if (rect.right >= window.innerWidth || rect.left <= 0){
-        //     this.dir.x *= -1;
-        // } 
+        if (paddleRects.some(r => isCollision(r, rect))){
+            this.dir.x *= -1;
+        } 
     }
 }  
 
 function randomNumberBetween(min, max){
     return Math.random() * (max - min) + min;
+}
+
+function isCollision(r1, r2){
+    return (r1.right >= r2.left && r1.left <= r2.right
+        && r1.bottom >= r2.top && r2.bottom >= r1.top);
 }
